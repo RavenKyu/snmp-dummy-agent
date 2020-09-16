@@ -12,20 +12,20 @@ RUN apk add tzdata && \
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev
 # snmp-dummy-agent python 의존 모듈 설치
 RUN mkdir -p /src/snmp-dummy-agent
-ADD snmp-dummy-agent/requirements.txt /src
+ADD src/snmp-dummy-agent/requirements.txt /src
 RUN pip install -r /src/requirements.txt
 
 # ==============================================================================
 # MIB 파일
 # MIB 파일 복사
 RUN mkdir -p /usr/share/snmp/mibs
-ADD mibs /usr/share/snmp/mibs
+ADD src/mibs /usr/share/snmp/mibs
 # MIB 파일 컴파일
 RUN mibdump.py --mib-source /usr/share/snmp/mibs MY-MIB
 
 # ==============================================================================
 # snmp-dummy-agent 빌드, 설치
-ADD . /src
+ADD src /src
 WORKDIR /src
 RUN python setup.py install
 
