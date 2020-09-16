@@ -7,7 +7,7 @@ setup(
     description="snmp dummy agent",
     license="MIT",
     keywords="snmp agent",
-    packages=['.'],
+    packages=['snmp-dummy-agent'],
     package_data={
     },
     classifiers=[

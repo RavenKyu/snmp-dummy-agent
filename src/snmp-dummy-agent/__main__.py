@@ -12,54 +12,54 @@ import time
 # can be useful
 # debug.setLogger(debug.Debug('all'))
 
-##########################################################################################
-MibObject = collections.namedtuple('MibObject', ['mibName',
-                                                 'objectType', 'valueGetFunc', 'valueSetFunc'])
+################################################################################
+MibObject = collections.namedtuple(
+    'MibObject', ['mibName', 'objectType', 'valueGetFunc', 'valueSetFunc'])
 
 
-##########################################################################################
+################################################################################
 class CustomMib(object):
     """Stores the data we want to serve.
     """
 
-    # =====================================================================================
+    # ==========================================================================
     def __init__(self):
         self._lock = threading.RLock()
         self._test_count = 0
 
-    # =====================================================================================
+    # ==========================================================================
     def getTestDescription(self):
         return "My Description [%s]" % self._test_count
 
-    # =====================================================================================
+    # ==========================================================================
     def getTestCount(self):
         with self._lock:
             return self._test_count
 
-    # =====================================================================================
+    # ==========================================================================
     def setTestCount(self, value):
         with self._lock:
             self._test_count = value
 
 
-##########################################################################################
+################################################################################
 def createVariable(SuperClass, getValue, setValue, *args):
     """This is going to create a instance variable that we can export.
     getValue is a function to call to retreive the value of the scalar
     """
 
-    # =====================================================================================
+    # ==========================================================================
     class Var(SuperClass):
         def readGet(self, name, *args):
             # print "	Getting var..."
             return name, self.syntax.clone(getValue())
 
-        # =====================================================================================
+        # ======================================================================
         def writeTest(self, name, *args):
             # print " Testing var..."
             pass
 
-        # =====================================================================================
+        # ======================================================================
         def writeCommit(self, name, val, *args):
             # print " Setting var..."
             setValue(val)
@@ -67,13 +67,13 @@ def createVariable(SuperClass, getValue, setValue, *args):
     return Var(*args)
 
 
-##########################################################################################
+################################################################################
 class SNMPAgent(object):
     """Implements an Agent that serves the custom MIB and
     can send a trap.
     """
 
-    # =====================================================================================
+    # ==========================================================================
     def __init__(self, mibObjects):
         """
         mibObjects - a list of MibObject tuples that this agent
